@@ -85,7 +85,82 @@ class Form extends Component {
   }
 }
 ```
+### iframes 
+In case you need to render the portal inside of an `iframe` you need to provide 
+a method to return the `document` as the context of the portal. 
 
+Here is an example:
+
+```js
+
+const INITIAL_CONTENT = '<!DOCTYPE html><html><head></head><body><div id="frame-root"></div></body></html>';
+
+class Iframe extends React.Component {
+	node = null;
+	getDocument = () => this.node.contentDocument;
+	isMounted = false;
+	initialContentRendered = false;
+	
+	componentDidMount() {
+        this.isMounted = true;
+        const doc = this.getDocument();
+        if (doc && doc.readyState === 'complete') {
+        	this.forceUpdate();
+        } else {
+        	this.node.addEventListener('load', this.handleLoad);
+        }
+	}
+    
+	componentWillUnmount() {
+		this.isMounted = false;
+        this.node.removeEventListener('load', this.handleLoad);
+	}
+    
+	handleLoad = () => {
+		this.forceUpdate();
+	};
+
+	
+	renderContent() {
+		if (!this.isMounted) {
+			return null;
+		}
+		
+		const doc = this.getDocument();
+	
+		if (!this.initialContentRendered) {
+		  doc.open('text/html', 'replace');
+		  doc.write(INITIAL_CONTENT);
+		  doc.close();
+		  this.initialContentRendered = true;
+		}
+	
+		return (
+		  <Portal into="#frame-root" getDocument={this.getDocument}>
+			{this.props.children}
+		  </Portal>
+		);
+	}
+	
+	render() {
+		return (
+			<iframe ref={node => this.node}>
+				{this.renderContent()}
+			</iframe>
+		);
+	}
+}
+
+class App extends React.Component {
+	render() {
+		return (
+			<Iframe>
+				<h1>I am inside a friendly iframe</h1>
+			</Iframe>
+		);
+	}
+}
+```
 
 [preact]: https://github.com/developit/preact
 [Demo #1]: http://jsfiddle.net/developit/bsr7gmdd/
