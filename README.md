@@ -85,9 +85,9 @@ class Form extends Component {
   }
 }
 ```
-### iframes 
-In case you need to render the portal inside of an `iframe` you need to provide 
-a method to return the `document` as the context of the portal. 
+### iframes & document context
+In cases were you need to render the portal inside of an `iframe`, you need to provide 
+the prop `getDocument` which is a method that return the `document` as the context of the portal. 
 
 Here is an example:
 
