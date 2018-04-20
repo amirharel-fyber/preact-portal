@@ -28,7 +28,14 @@ export default class Portal extends Component {
 	}
 
 	findNode(node) {
-		return typeof node==='string' ? document.querySelector(node) : node;
+		return typeof node==='string' ? this.getDocument().querySelector(node) : node;
+	}
+	
+	getDocument() {
+		if (this.props.getDocument) {
+			return this.props.getDocument();
+		}
+		return document;
 	}
 
 	renderLayer(show=true) {
