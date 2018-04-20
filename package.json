@@ -1,7 +1,7 @@
 {
   "name": "preact-portal",
   "amdName": "preactPortal",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Render Preact components somewhere in [a different] space.",
   "main": "dist/preact-portal.js",
   "minified:main": "dist/preact-portal.min.js",
